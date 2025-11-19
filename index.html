@@ -1,77 +1,107 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
     <meta charset="UTF-8">
-    <title>Fish RNG Simulator</title>
+    <title>Kalkulator Peluang Ikan</title>
     <style>
         body {
-            background: #0d1321;
+            font-family: Arial;
+            background: #0f172a;
+            margin: 0;
+            padding: 20px;
             color: white;
-            font-family: Arial, sans-serif;
-            text-align: center;
-            padding-top: 60px;
+        }
+        .container {
+            max-width: 480px;
+            margin: auto;
+            background: #1e293b;
+            padding: 20px;
+            border-radius: 10px;
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            margin: 8px 0;
+            border-radius: 5px;
+            border: none;
         }
         button {
-            padding: 12px 25px;
-            font-size: 18px;
-            border: none;
-            border-radius: 8px;
-            background: #4f7cac;
+            width: 100%;
+            padding: 12px;
+            background: #3b82f6;
             color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
             cursor: pointer;
         }
         button:hover {
-            background: #87bfff;
+            background: #60a5fa;
         }
-        #result {
-            margin-top: 30px;
-            font-size: 28px;
-            font-weight: bold;
+        .hasil {
+            margin-top: 20px;
+            padding: 15px;
+            background: #0f172a;
+            border-radius: 10px;
         }
-        .rarity {
-            font-weight: bold;
-        }
-        .Common { color: #d1d1d1; }
-        .Rare { color: #2fa8ff; }
-        .Epic { color: #b54bff; }
-        .Legend { color: #ffb02e; }
-        .Secret { color: #ff3b3b; }
     </style>
 </head>
 <body>
 
-    <h1>🎣 Fish RNG Simulator</h1>
-    <p>Tekan tombol untuk melihat rarity ikan yang kamu dapat!</p>
+<div class="container">
+    <h2>Kalkulator Peluang Ikan 🎣</h2>
 
-    <button onclick="rollFish()">Roll Ikan</button>
+    <label>Jumlah Rare</label>
+    <input type="number" id="rare" placeholder="contoh: 100">
 
-    <div id="result"></div>
+    <label>Jumlah Epic</label>
+    <input type="number" id="epic" placeholder="contoh: 50">
 
-    <script>
-        // Sistem rarity (boleh edit)
-        const rarities = [
-            { name: "Common",  chance: 60 },
-            { name: "Rare",    chance: 25 },
-            { name: "Epic",    chance: 10 },
-            { name: "Legend",  chance: 4 },
-            { name: "Secret",  chance: 1 }
-        ];
+    <label>Jumlah Legend</label>
+    <input type="number" id="legend" placeholder="contoh: 20">
 
-        function rollFish() {
-            let total = rarities.reduce((sum, r) => sum + r.chance, 0);
-            let rng = Math.random() * total;
-            let cumulative = 0;
+    <label>Jumlah Mitos</label>
+    <input type="number" id="mitos" placeholder="contoh: 5">
 
-            for (let r of rarities) {
-                cumulative += r.chance;
-                if (rng <= cumulative) {
-                    document.getElementById("result").innerHTML =
-                        `Kamu mendapatkan: <span class="rarity ${r.name}">${r.name}</span> ⭐`;
-                    return;
-                }
-            }
-        }
-    </script>
+    <label>Jumlah Secret</label>
+    <input type="number" id="secret" placeholder="contoh: 1">
+
+    <button onclick="hitung()">Hitung Peluang</button>
+
+    <div class="hasil" id="hasil"></div>
+</div>
+
+<script>
+function hitung() {
+    let rare = parseInt(document.getElementById("rare").value) || 0;
+    let epic = parseInt(document.getElementById("epic").value) || 0;
+    let legend = parseInt(document.getElementById("legend").value) || 0;
+    let mitos = parseInt(document.getElementById("mitos").value) || 0;
+    let secret = parseInt(document.getElementById("secret").value) || 0;
+
+    let total = rare + epic + legend + mitos + secret;
+
+    if (total === 0) {
+        document.getElementById("hasil").innerHTML = "Masukkan jumlah ikan dulu.";
+        return;
+    }
+
+    function persen(x) {
+        return ((x / total) * 100).toFixed(2);
+    }
+
+    document.getElementById("hasil").innerHTML = `
+        <h3>Hasil Perhitungan:</h3>
+        Total ikan: ${total}<br><br>
+        Rare: ${persen(rare)}%<br>
+        Epic: ${persen(epic)}%<br>
+        Legend: ${persen(legend)}%<br>
+        Mitos: ${persen(mitos)}%<br>
+        Secret: <b>${persen(secret)}%</b><br><br>
+        <b>Peluang dapat Secret: ${persen(secret)}%</b>
+    `;
+}
+</script>
 
 </body>
 </html>
